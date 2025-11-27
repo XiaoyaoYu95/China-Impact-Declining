@@ -1,1 +1,1 @@
-# Understanding why China's research works receive a low and declining fraction of international citation
+# The statistical penalty of scientific hyper-growth: Why China's international citation ratio is low and declining
