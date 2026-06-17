@@ -1,62 +1,46 @@
-# The statistical penalty of scientific hyper-growth: Why China's international citation ratio is low and declining
+# China International Citation Ratio
 
-This repository contains data and code required to reproduce the findings in paper "The statistical penalty of scientific hyper-growth: Why China's international citation ratio is low and declining".
+This repository contains a notebook-oriented reproduction package for the paper **The statistical penalty of scientific hypergrowth: Why China's international citation ratio is low and declining**.
 
-## Input Data Assumptions
+## Repository Layout
 
-The scripts assume a local/HPC data environment. Static inspection found hard-coded inputs under:
+- `notebooks/0_data_processing.ipynb`: OpenAlex snapshot flattening, citation matrix construction, paper properties, ISSN matching, Web of Science journal filtering, and SJR quartile assignment.
+- `notebooks/1_compute_core_data_products.ipynb`: core result tables for international citation ratio `f`, domestic preference `Delta_i`, international preference `Delta_{j,i}`, publication quantities, and reference-list quantities.
+- `notebooks/2_neutralization_and_perturbation.ipynb`: citation-preference neutralization plus China/India publication perturbation procedures.
+- `notebooks/3_plot_paper_figures.ipynb`: consolidated plotting entry point for manuscript and supplementary figures.
+- `code/`: archived copy of the original scripts, unchanged.
+- `data/`: expected local inputs and generated pickles. Large data are not included.
+- `outputs/results/`: generated tabular intermediate outputs.
+- `outputs/figures/`: generated figures.
 
-Expected files include, among others:
+## Data
 
-- `citation_matrix_csr.pickle`
-- `wos2025_Journal_ISSN_all.csv`
-- `Paper_ISSN_list.pickle`
-- `Paper_country_1st_aff.pickle`
-- `Paper_country_corr_aff.pickle`
-- `Paper_country_all_aff.pickle`
-- `Paper_year.pickle`
-- `Paper_OA_tag.pickle`
-- `Paper_ISSN_SJR.pickle`
-- `Paper_field_1st.pickle`
-- `Paper_domain_1st.pickle`
+Place raw data in these locations before running the notebooks:
 
-The manuscript describes the primary dataset as OpenAlex Aug-2025 filtered to Web of Science Core Collection venues, version Feb-2026. The repository does not include the large raw pickles or generated result tables.
+- `data/Openalex_2025/snapshot/`: OpenAlex snapshot. OpenAlex documents public snapshot downloads and gives an anonymous AWS CLI sync command for the snapshot. See [OpenAlex data downloads](https://developers.openalex.org/download/overview) and [download instructions](https://developers.openalex.org/download/download-to-machine).
+- `data/scimagojr/scimagojr_YYYY.csv`: SCImago Journal Rank yearly CSV files for 1999-2025. See [SJR journal rankings](https://www.scimagojr.com/journalrank.php).
+- `data/wos_core_collection/`: Web of Science Master Journal List collection CSVs named exactly as used by the notebook: `Science Citation Index Expanded (SCIE).csv`, `Social Sciences Citation Index (SSCI).csv`, `Arts & Humanities Citation Index (AHCI).csv`, and `Emerging Sources Citation Index (ESCI).csv`. See Clarivate [Collection List Downloads](https://mjl.clarivate.com/collection-list-downloads).
 
-## Suggested Running Order
+## Running Order
 
-For a readable workflow, use:
+1. Run `notebooks/0_data_processing.ipynb` to create CSV extracts and pickles under `data/Openalex_2025/`.
+2. Run `notebooks/1_compute_core_data_products.ipynb` to create core result folders under `outputs/results/`.
+3. Run `notebooks/2_neutralization_and_perturbation.ipynb` for neutralization and perturbation results. Expensive bootstrap calls are present but commented by default.
+4. Run `notebooks/3_plot_paper_figures.ipynb` after all required result tables exist.
 
-1. `notebooks/0_data_analyzing.ipynb`
-2. `notebooks/1_figure_plotting_main.ipynb`
+The repository is intended as reproducible code, not as a precomputed data release. The original task explicitly avoids running the full data processing and plotting pipeline during repository assembly.
 
-The notebooks preserve the original scripts by calling them as external processes. The underlying script order below reflects dependency flow inferred from script inputs and outputs:
+## System and software requirements
 
-1. Run `code/1_data_analyzing/c1_inter_citation_rate.py` for raw and normalized `f` tables.
-2. Run `code/1_data_analyzing/c1_inter_citation_rate_corr.py` for corresponding-affiliation robustness tables.
-3. Run `code/1_data_analyzing/c3_domestic_referencing_rate.py` for domestic citation preference inputs.
-4. Run `code/1_data_analyzing/c3_rescale_domestic_referencing_rate_delta_convex.py` for domestic-preference neutralization outputs.
-5. Run `code/1_data_analyzing/c4_inter_referencing_rate.py` and `code/1_data_analyzing/c4_inter_referencing_rate_Q1.py` for international citation preference matrices.
-6. Run `code/1_data_analyzing/c4_rescale_inter_referencing_rate_delta_convex.py` for international-preference neutralization outputs.
-7. Run `code/1_data_analyzing/c5_Paper_Count_Rate_of_Country.py` and `code/1_data_analyzing/c5_reference_list_length.py` for publication/reference counts and growth rates.
-8. Run the `c5_*bootstrap*` scripts for publication-volume and growth-rate perturbation outputs.
-9. Run scripts in `code/2_figure_plotting_main/` to generate the paper figures.
+The project was created and executed on the the High Performance Computing Center from Southwest University and New York University Abu Dhabi. The code in this repo can run on any commercial laptop with Python 3 installed.
 
-Some figure scripts require intermediate tables not generated by the archived scope, especially `p2_inter_citation_rate_impact_group*` and some older `p5_reduce_*` paths. See `docs/code_paper_consistency_report.md`.
 
-## Dependencies
+Python libraries:
 
-Install the Python packages listed in `requirements.txt`:
+pandas 2.2.2
+numpy 1.26.4
+scipy 1.13.1
+seaborn 0.13.2
+matplotlib 3.9.2
 
-```bash
-pip install -r requirements.txt
-```
-
-The scripts were archived from a research workflow and may require substantial memory and storage because they load large citation matrices.
-
-## Reproducibility Notes
-
-- This is a scientific archive of submitted-paper code, not a refactored software package.
-- Original scripts were preserved as executable files and moved under `code/`.
-- No scientific functionality was intentionally changed.
-- Potential mismatches, old terminology, ambiguous paths, and unmapped scripts are documented in `docs/code_paper_consistency_report.md`.
-- The most important manual check is to confirm that each plotted PDF regenerated from the archived scripts is visually identical to the submitted manuscript figures.
+Full OpenAlex-scale runs require substantial RAM and disk space because the workflow builds large sparse citation matrices and all-paper dictionaries.
