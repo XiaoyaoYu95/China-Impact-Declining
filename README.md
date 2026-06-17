@@ -37,10 +37,10 @@ The project was created and executed on the the High Performance Computing Cente
 
 Python libraries:
 
-pandas 2.2.2
-numpy 1.26.4
-scipy 1.13.1
-seaborn 0.13.2
-matplotlib 3.9.2
+- pandas 2.2.2
+- numpy 1.26.4
+- scipy 1.13.1
+- seaborn 0.13.2
+- matplotlib 3.9.2
 
 Full OpenAlex-scale runs require substantial RAM and disk space because the workflow builds large sparse citation matrices and all-paper dictionaries.
