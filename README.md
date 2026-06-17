@@ -5,7 +5,7 @@ This repository contains a notebook-oriented reproduction package for the paper 
 ## Repository Layout
 
 - `notebooks/0_data_processing.ipynb`: OpenAlex snapshot flattening, citation matrix construction, paper properties, ISSN matching, Web of Science journal filtering, and SJR quartile assignment.
-- `notebooks/1_compute_core_data_products.ipynb`: core result tables for international citation ratio `f`, domestic preference `Delta_i`, international preference `Delta_{j,i}`, publication quantities, and reference-list quantities.
+- `notebooks/1_compute_core_data_products.ipynb`: core result tables for international citation ratio $f$, domestic citation preference $\Delta_i$, international citation preference $\Delta_{j,i}$, publication quantities, and reference-list quantities.
 - `notebooks/2_neutralization_and_perturbation.ipynb`: citation-preference neutralization plus China/India publication perturbation procedures.
 - `notebooks/3_plot_paper_figures.ipynb`: consolidated plotting entry point for manuscript and supplementary figures.
 - `code/`: archived copy of the original scripts, unchanged.
